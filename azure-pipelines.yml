@@ -1,0 +1,35 @@
+# Azure Pipelines YAML for React App
+# This pipeline installs dependencies, builds the app, and publishes build artifacts.
+# It is simple, reliable, and integrates well with Azure Boards.
+
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+    displayName: 'Install dependencies'
+
+
+  - script: |
+      npm test -- --watchAll=false
+    displayName: 'Run tests'
+
+  - script: |
+      npm run build
+    displayName: 'Build app'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'build'
+      ArtifactName: 'react-app-build'
+      publishLocation: 'Container'
+    displayName: 'Publish build artifacts'
