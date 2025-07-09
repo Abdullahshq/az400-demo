@@ -18,10 +18,9 @@ steps:
 
   - script: |
       npm install --legacy-peer-deps --loglevel warn
-      npm install express
       npm audit --audit-level=high || true
       npm outdated || true
-    displayName: 'Install dependencies (no deprecated, audit, outdated, express)'
+    displayName: 'Install dependencies (no deprecated, audit, outdated)'
 
 
 
@@ -31,21 +30,19 @@ steps:
 
 
 
+
   - script: |
       npm run build
     displayName: 'Build app'
 
-
-  # No need for web.config with Express server
-
   - script: |
-      cd build
-      zip -r ../react-app-build.zip .
-    displayName: 'Zip build output'
+      cp web.config build/
+    displayName: 'Copy web.config to build folder'
+
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: 'react-app-build.zip'
+      PathtoPublish: 'build'
       ArtifactName: 'react-app-build'
       publishLocation: 'Container'
-    displayName: 'Publish build artifact (zip)'
+    displayName: 'Publish build artifact'
