@@ -35,9 +35,6 @@ steps:
       npm run build
     displayName: 'Build app'
 
-  - script: |
-      cp web.config build/
-    displayName: 'Copy web.config to build folder'
 
 
   - task: PublishBuildArtifacts@1
