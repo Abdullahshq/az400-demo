@@ -15,11 +15,13 @@ steps:
     displayName: 'Install Node.js'
 
 
+
   - script: |
       npm install --legacy-peer-deps --loglevel warn
+      npm install express
       npm audit --audit-level=high || true
       npm outdated || true
-    displayName: 'Install dependencies (no deprecated, audit, outdated)'
+    displayName: 'Install dependencies (no deprecated, audit, outdated, express)'
 
 
 
@@ -27,13 +29,23 @@ steps:
       CI=true npm test -- --watchAll=false
     displayName: 'Run tests (CI mode)'
 
+
+
   - script: |
       npm run build
     displayName: 'Build app'
 
+
+  # No need for web.config with Express server
+
+  - script: |
+      cd build
+      zip -r ../react-app-build.zip .
+    displayName: 'Zip build output'
+
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: 'build'
+      PathtoPublish: 'react-app-build.zip'
       ArtifactName: 'react-app-build'
       publishLocation: 'Container'
-    displayName: 'Publish build artifacts'
+    displayName: 'Publish build artifact (zip)'
